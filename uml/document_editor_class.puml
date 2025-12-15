@@ -1,0 +1,147 @@
+@startuml document_editor_class_diagram
+!theme plain
+skinparam classAttributeIconSize 0
+skinparam classFontSize 12
+
+title Document Editor - Class Diagram
+
+package "editor.core" {
+    interface Document {
+        +getTitle(): String
+        +setContent(content: String): void
+        +getContent(): String
+        +save(): byte[]
+        +render(): String
+        +getFormatKey(): String
+    }
+    
+    abstract class AbstractDocument {
+        #title: String
+        #content: String
+        --
+        #AbstractDocument(title: String)
+        +getTitle(): String
+        +setContent(content: String): void
+        +getContent(): String
+    }
+    
+    class Editor {
+        -documentFactory: DocumentFactory
+        -currentDocument: Document
+        --
+        +Editor(documentFactory: DocumentFactory)
+        +newDocument(formatKey: String, title: String): Editor
+        +edit(content: String): Editor
+        +preview(): String
+        +save(): byte[]
+        +getCurrentDocument(): Document
+        +hasOpenDocument(): boolean
+        +closeDocument(): void
+    }
+    
+    class UnknownDocumentFormatException {
+        -formatKey: String
+        --
+        +UnknownDocumentFormatException(formatKey: String)
+        +getFormatKey(): String
+    }
+}
+
+package "editor.factory" {
+    interface DocumentProvider {
+        +formatKey(): String
+        +create(title: String): Document
+    }
+    
+    class DocumentFactory {
+        -registry: Map<String, DocumentProvider>
+        --
+        +register(provider: DocumentProvider): DocumentFactory
+        +registerAll(providers: DocumentProvider...): DocumentFactory
+        +createDocument(formatKey: String, title: String): Document
+        +supportsFormat(formatKey: String): boolean
+        +getSupportedFormats(): Set<String>
+        {static} +createDefault(): DocumentFactory
+    }
+    
+    class PdfDocumentProvider {
+        +formatKey(): String
+        +create(title: String): Document
+    }
+    
+    class WordDocumentProvider {
+        +formatKey(): String
+        +create(title: String): Document
+    }
+    
+    class HtmlDocumentProvider {
+        +formatKey(): String
+        +create(title: String): Document
+    }
+}
+
+package "editor.formats" {
+    class PdfDocument {
+        {static} +FORMAT_KEY: String = "pdf"
+        --
+        +PdfDocument(title: String)
+        +save(): byte[]
+        +render(): String
+        +getFormatKey(): String
+    }
+    
+    class WordDocument {
+        {static} +FORMAT_KEY: String = "word"
+        --
+        +WordDocument(title: String)
+        +save(): byte[]
+        +render(): String
+        +getFormatKey(): String
+        -escapeXml(text: String): String
+    }
+    
+    class HtmlDocument {
+        {static} +FORMAT_KEY: String = "html"
+        --
+        +HtmlDocument(title: String)
+        +save(): byte[]
+        +render(): String
+        +getFormatKey(): String
+        -escapeHtml(text: String): String
+    }
+}
+
+' Relationships
+Document <|.. AbstractDocument
+AbstractDocument <|-- PdfDocument
+AbstractDocument <|-- WordDocument
+AbstractDocument <|-- HtmlDocument
+
+DocumentProvider <|.. PdfDocumentProvider
+DocumentProvider <|.. WordDocumentProvider
+DocumentProvider <|.. HtmlDocumentProvider
+
+DocumentFactory o--> "*" DocumentProvider : registry
+DocumentFactory ..> Document : creates
+DocumentFactory ..> UnknownDocumentFormatException : throws
+
+Editor --> DocumentFactory : uses
+Editor --> Document : currentDocument
+
+PdfDocumentProvider ..> PdfDocument : creates
+WordDocumentProvider ..> WordDocument : creates
+HtmlDocumentProvider ..> HtmlDocument : creates
+
+note right of DocumentFactory
+  Registry-based Factory Pattern
+  No switch statements
+  New formats added by registering providers
+end note
+
+note right of Editor
+  Depends only on abstractions
+  (Document interface & DocumentFactory)
+  No knowledge of concrete implementations
+end note
+
+@enduml

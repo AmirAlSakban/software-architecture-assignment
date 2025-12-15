@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CarManagementSystem.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">assignment1</a> &gt; <a href="index.source.html" class="el_package">integration</a> &gt; <span class="el_source">CarManagementSystem.java</span></div><h1>CarManagementSystem.java</h1><pre class="source lang-java linenums">package integration;
+
+import car.domain.Car;
+import editor.core.Document;
+import editor.core.Editor;
+import editor.factory.DocumentFactory;
+
+/**
+ * Car Management System that integrates car configuration with document generation.
+ * Demonstrates the combination of Builder pattern (Car) with Factory pattern (Document).
+ */
+public class CarManagementSystem {
+    
+    private final Editor editor;
+    private final CarReportGenerator reportGenerator;
+    
+<span class="fc" id="L17">    public CarManagementSystem(DocumentFactory documentFactory) {</span>
+<span class="fc" id="L18">        this.editor = new Editor(documentFactory);</span>
+<span class="fc" id="L19">        this.reportGenerator = new CarReportGenerator();</span>
+<span class="fc" id="L20">    }</span>
+    
+<span class="nc" id="L22">    public CarManagementSystem(Editor editor) {</span>
+<span class="nc" id="L23">        this.editor = editor;</span>
+<span class="nc" id="L24">        this.reportGenerator = new CarReportGenerator();</span>
+<span class="nc" id="L25">    }</span>
+    
+    /**
+     * Generates a document for the car configuration in the specified format.
+     * 
+     * @param car the car to document
+     * @param formatKey the document format (e.g., &quot;pdf&quot;, &quot;word&quot;, &quot;html&quot;)
+     * @return the generated document
+     */
+    public Document generateCarDocument(Car car, String formatKey) {
+<span class="fc" id="L35">        String title = reportGenerator.generateTitle(car);</span>
+<span class="fc" id="L36">        String content = reportGenerator.generateReport(car);</span>
+        
+<span class="fc" id="L38">        editor.newDocument(formatKey, title)</span>
+<span class="fc" id="L39">              .edit(content);</span>
+        
+<span class="fc" id="L41">        return editor.getCurrentDocument();</span>
+    }
+    
+    /**
+     * Generates and saves a document for the car configuration.
+     * 
+     * @param car the car to document
+     * @param formatKey the document format
+     * @return the saved document as bytes
+     */
+    public byte[] generateAndSaveCarDocument(Car car, String formatKey) {
+<span class="fc" id="L52">        generateCarDocument(car, formatKey);</span>
+<span class="fc" id="L53">        return editor.save();</span>
+    }
+    
+    /**
+     * Generates a preview of the car document.
+     * 
+     * @param car the car to document
+     * @param formatKey the document format
+     * @return the document preview
+     */
+    public String previewCarDocument(Car car, String formatKey) {
+<span class="fc" id="L64">        generateCarDocument(car, formatKey);</span>
+<span class="fc" id="L65">        return editor.preview();</span>
+    }
+    
+    /**
+     * Gets the underlying editor.
+     * @return the editor
+     */
+    public Editor getEditor() {
+<span class="fc" id="L73">        return editor;</span>
+    }
+    
+    /**
+     * Gets the report generator.
+     * @return the report generator
+     */
+    public CarReportGenerator getReportGenerator() {
+<span class="fc" id="L81">        return reportGenerator;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,0 +1,88 @@
+@startuml car_document_generation_sequence
+!theme plain
+
+title Car → Document Generation Flow (Integration)
+
+actor Client
+participant "carSystem:\nCarManagementSystem" as CarSystem
+participant "reportGenerator:\nCarReportGenerator" as ReportGen
+participant "editor:\nEditor" as Editor
+participant "factory:\nDocumentFactory" as Factory
+participant Document
+participant Car
+
+== Generate Car Document ==
+
+Client -> CarSystem: generateCarDocument(car, "pdf")
+activate CarSystem
+
+CarSystem -> ReportGen: generateTitle(car)
+activate ReportGen
+ReportGen -> Car: getModel()
+activate Car
+Car --> ReportGen: CarModel.SUV
+deactivate Car
+ReportGen --> CarSystem: "SUV - Configuration Report"
+deactivate ReportGen
+
+CarSystem -> ReportGen: generateReport(car)
+activate ReportGen
+ReportGen -> Car: getModel(), getEngine(),\ngetTransmission(), getColor()
+activate Car
+Car --> ReportGen: details
+deactivate Car
+ReportGen -> Car: getInteriorFeatures(),\ngetExteriorFeatures(),\ngetSafetyFeatures()
+activate Car
+Car --> ReportGen: features
+deactivate Car
+ReportGen --> CarSystem: formatted report content
+deactivate ReportGen
+
+CarSystem -> Editor: newDocument("pdf", title)
+activate Editor
+Editor -> Factory: createDocument("pdf", title)
+activate Factory
+create Document
+Factory -> Document: new PdfDocument(title)
+Factory --> Editor: document
+deactivate Factory
+Editor --> CarSystem: this
+deactivate Editor
+
+CarSystem -> Editor: edit(reportContent)
+activate Editor
+Editor -> Document: setContent(reportContent)
+activate Document
+Document --> Editor: void
+deactivate Document
+Editor --> CarSystem: this
+deactivate Editor
+
+CarSystem -> Editor: getCurrentDocument()
+activate Editor
+Editor --> CarSystem: document
+deactivate Editor
+
+CarSystem --> Client: document
+deactivate CarSystem
+
+note over CarSystem
+  CarManagementSystem coordinates:
+  1. Report generation (format-agnostic)
+  2. Document creation (via factory)
+  3. Content population (via editor)
+end note
+
+note over ReportGen
+  CarReportGenerator creates
+  content that works with
+  any document format
+end note
+
+note over Document
+  Document handles only
+  format-specific rendering
+  and saving
+end note
+
+@enduml

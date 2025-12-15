@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="editor.formats.DocumentFormatsTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2025-12-15T15:23:53" hostname="LENOVOT590" time="0.051">
+  <properties/>
+  <testcase name="PdfDocument should have correct format key" classname="editor.formats.DocumentFormatsTest" time="0.001"/>
+  <testcase name="Documents should handle null content" classname="editor.formats.DocumentFormatsTest" time="0.001"/>
+  <testcase name="PdfDocument should save with PDF header" classname="editor.formats.DocumentFormatsTest" time="0.001"/>
+  <testcase name="HtmlDocument should escape HTML characters" classname="editor.formats.DocumentFormatsTest" time="0.01"/>
+  <testcase name="WordDocument should escape XML characters" classname="editor.formats.DocumentFormatsTest" time="0.002"/>
+  <testcase name="Documents should reject null or blank title" classname="editor.formats.DocumentFormatsTest" time="0.003"/>
+  <testcase name="HtmlDocument should render with HTML markers" classname="editor.formats.DocumentFormatsTest" time="0.001"/>
+  <testcase name="WordDocument should render with Word markers" classname="editor.formats.DocumentFormatsTest" time="0.006"/>
+  <testcase name="HtmlDocument should have correct format key" classname="editor.formats.DocumentFormatsTest" time="0.003"/>
+  <testcase name="PdfDocument should render with PDF markers" classname="editor.formats.DocumentFormatsTest" time="0.001"/>
+  <testcase name="WordDocument should save as XML" classname="editor.formats.DocumentFormatsTest" time="0.001"/>
+  <testcase name="HtmlDocument should save as full HTML" classname="editor.formats.DocumentFormatsTest" time="0.002"/>
+  <testcase name="Each format should produce different output" classname="editor.formats.DocumentFormatsTest" time="0.002"/>
+  <testcase name="WordDocument should have correct format key" classname="editor.formats.DocumentFormatsTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

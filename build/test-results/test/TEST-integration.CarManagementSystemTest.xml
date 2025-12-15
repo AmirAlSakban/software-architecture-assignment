@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="integration.CarManagementSystemTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2025-12-15T15:23:53" hostname="LENOVOT590" time="0.042">
+  <properties/>
+  <testcase name="Document content should include engine info" classname="integration.CarManagementSystemTest" time="0.008"/>
+  <testcase name="Should generate documents in all formats for same car" classname="integration.CarManagementSystemTest" time="0.002"/>
+  <testcase name="Document content should include features" classname="integration.CarManagementSystemTest" time="0.001"/>
+  <testcase name="Should generate HTML document for car" classname="integration.CarManagementSystemTest" time="0.001"/>
+  <testcase name="Should generate PDF document for car" classname="integration.CarManagementSystemTest" time="0.001"/>
+  <testcase name="Should get underlying editor" classname="integration.CarManagementSystemTest" time="0.001"/>
+  <testcase name="Should get report generator" classname="integration.CarManagementSystemTest" time="0.002"/>
+  <testcase name="Document title should contain car model" classname="integration.CarManagementSystemTest" time="0.001"/>
+  <testcase name="Should generate Word document for car" classname="integration.CarManagementSystemTest" time="0.002"/>
+  <testcase name="Document content should include transmission info" classname="integration.CarManagementSystemTest" time="0.001"/>
+  <testcase name="Should preview car document" classname="integration.CarManagementSystemTest" time="0.002"/>
+  <testcase name="Correct document implementation should be used via factory" classname="integration.CarManagementSystemTest" time="0.002"/>
+  <testcase name="Should save car document" classname="integration.CarManagementSystemTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PdfDocument.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">assignment1</a> &gt; <a href="index.source.html" class="el_package">editor.formats</a> &gt; <span class="el_source">PdfDocument.java</span></div><h1>PdfDocument.java</h1><pre class="source lang-java linenums">package editor.formats;
+
+import editor.core.AbstractDocument;
+
+import java.nio.charset.StandardCharsets;
+
+/**
+ * PDF document implementation.
+ * Simulates PDF-specific save and render behavior.
+ */
+public class PdfDocument extends AbstractDocument {
+    
+    public static final String FORMAT_KEY = &quot;pdf&quot;;
+    
+    public PdfDocument(String title) {
+<span class="fc" id="L16">        super(title);</span>
+<span class="fc" id="L17">    }</span>
+    
+    @Override
+    public byte[] save() {
+        // Simulate PDF binary format with header
+<span class="fc" id="L22">        String pdfContent = &quot;%PDF-1.4\n&quot; +</span>
+                &quot;% &quot; + title + &quot;\n&quot; +
+                &quot;1 0 obj\n&quot; +
+                &quot;&lt;&lt; /Type /Catalog /Pages 2 0 R &gt;&gt;\n&quot; +
+                &quot;endobj\n&quot; +
+                &quot;2 0 obj\n&quot; +
+                &quot;&lt;&lt; /Type /Pages /Kids [3 0 R] /Count 1 &gt;&gt;\n&quot; +
+                &quot;endobj\n&quot; +
+                &quot;3 0 obj\n&quot; +
+                &quot;&lt;&lt; /Type /Page /Parent 2 0 R /Contents 4 0 R &gt;&gt;\n&quot; +
+                &quot;endobj\n&quot; +
+                &quot;4 0 obj\n&quot; +
+<span class="fc" id="L34">                &quot;&lt;&lt; /Length &quot; + content.length() + &quot; &gt;&gt;\n&quot; +</span>
+                &quot;stream\n&quot; +
+                content + &quot;\n&quot; +
+                &quot;endstream\n&quot; +
+                &quot;endobj\n&quot; +
+                &quot;%%EOF&quot;;
+<span class="fc" id="L40">        return pdfContent.getBytes(StandardCharsets.UTF_8);</span>
+    }
+    
+    @Override
+    public String render() {
+<span class="fc" id="L45">        return &quot;[PDF Preview]\n&quot; +</span>
+               &quot;═══════════════════════════════════\n&quot; +
+               &quot;Title: &quot; + title + &quot;\n&quot; +
+               &quot;───────────────────────────────────\n&quot; +
+               content + &quot;\n&quot; +
+               &quot;═══════════════════════════════════\n&quot; +
+               &quot;[End of PDF Preview]&quot;;
+    }
+    
+    @Override
+    public String getFormatKey() {
+<span class="fc" id="L56">        return FORMAT_KEY;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

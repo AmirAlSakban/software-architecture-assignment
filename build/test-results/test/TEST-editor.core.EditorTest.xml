@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="editor.core.EditorTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2025-12-15T15:23:52" hostname="LENOVOT590" time="0.091">
+  <properties/>
+  <testcase name="Editor should throw exception for unknown format" classname="editor.core.EditorTest" time="0.015"/>
+  <testcase name="Editor should save document" classname="editor.core.EditorTest" time="0.016"/>
+  <testcase name="Editor should throw exception when previewing without document" classname="editor.core.EditorTest" time="0.002"/>
+  <testcase name="Editor should create HTML document via factory" classname="editor.core.EditorTest" time="0.008"/>
+  <testcase name="Editor should create PDF document via factory" classname="editor.core.EditorTest" time="0.001"/>
+  <testcase name="Editor should preview document" classname="editor.core.EditorTest" time="0.012"/>
+  <testcase name="Editor should throw exception when editing without document" classname="editor.core.EditorTest" time="0.002"/>
+  <testcase name="Editor should throw exception when saving without document" classname="editor.core.EditorTest" time="0.002"/>
+  <testcase name="Editor should close document" classname="editor.core.EditorTest" time="0.004"/>
+  <testcase name="Editor should not accept null factory" classname="editor.core.EditorTest" time="0.003"/>
+  <testcase name="Editor should work with case-insensitive format keys" classname="editor.core.EditorTest" time="0.004"/>
+  <testcase name="Editor should support fluent API" classname="editor.core.EditorTest" time="0.001"/>
+  <testcase name="Editor should create Word document via factory" classname="editor.core.EditorTest" time="0.001"/>
+  <testcase name="Editor should edit document content" classname="editor.core.EditorTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

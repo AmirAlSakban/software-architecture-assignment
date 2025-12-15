@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="integration.CarReportGeneratorTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2025-12-15T15:23:53" hostname="LENOVOT590" time="0.025">
+  <properties/>
+  <testcase name="Should generate report with color" classname="integration.CarReportGeneratorTest" time="0.002"/>
+  <testcase name="Should generate report with exterior features" classname="integration.CarReportGeneratorTest" time="0.002"/>
+  <testcase name="Should generate report with interior features" classname="integration.CarReportGeneratorTest" time="0.002"/>
+  <testcase name="Should generate appropriate title" classname="integration.CarReportGeneratorTest" time="0.001"/>
+  <testcase name="Should generate report with engine and transmission" classname="integration.CarReportGeneratorTest" time="0.001"/>
+  <testcase name="Report should not include empty sections" classname="integration.CarReportGeneratorTest" time="0.003"/>
+  <testcase name="Should generate report with safety features" classname="integration.CarReportGeneratorTest" time="0.001"/>
+  <testcase name="Should generate report with model info" classname="integration.CarReportGeneratorTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

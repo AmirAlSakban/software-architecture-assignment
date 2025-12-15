@@ -1,0 +1,104 @@
+@startuml car_configuration_sequence
+!theme plain
+
+title Step-by-Step Car Configuration
+
+actor Client
+participant "wizard:\nCarConfigurationWizard" as Wizard
+participant "builder:\nCarBuilder" as Builder
+participant CarModel
+participant Car
+
+== Step 1: Select Model ==
+Client -> Wizard: selectModel(CarModel.SUV)
+activate Wizard
+Wizard -> Builder: withModel(SUV)
+activate Builder
+Builder --> Wizard: this
+deactivate Builder
+Wizard --> Client: EngineStep
+deactivate Wizard
+
+== Step 2: Select Engine ==
+Client -> Wizard: selectEngine(V8)
+note right: Through EngineStep interface
+activate Wizard
+Wizard -> Builder: withEngine(V8)
+activate Builder
+Builder --> Wizard: this
+deactivate Builder
+Wizard --> Client: TransmissionStep
+deactivate Wizard
+
+== Step 3: Select Transmission ==
+Client -> Wizard: selectTransmission(AUTOMATIC)
+note right: Through TransmissionStep interface
+activate Wizard
+Wizard -> Builder: withTransmission(AUTOMATIC)
+activate Builder
+Builder --> Wizard: this
+deactivate Builder
+Wizard --> Client: OptionsStep
+deactivate Wizard
+
+== Step 4: Add Optional Features ==
+Client -> Wizard: setColor(BLACK)
+activate Wizard
+Wizard -> Builder: setColor(BLACK)
+Wizard --> Client: OptionsStep
+deactivate Wizard
+
+Client -> Wizard: addInteriorFeature(LEATHER)
+activate Wizard
+Wizard -> Builder: addInteriorFeature(LEATHER)
+Wizard --> Client: OptionsStep
+deactivate Wizard
+
+Client -> Wizard: addSafetyFeature(ABS)
+activate Wizard
+Wizard -> Builder: addSafetyFeature(ABS)
+Wizard --> Client: OptionsStep
+deactivate Wizard
+
+== Step 5: Build ==
+Client -> Wizard: build()
+activate Wizard
+Wizard -> Builder: build()
+activate Builder
+
+Builder -> Builder: validateRequiredFields()
+note right
+  Checks: model, engine, 
+  transmission not null
+end note
+
+Builder -> CarModel: supportsEngine(V8)?
+activate CarModel
+CarModel --> Builder: true
+deactivate CarModel
+
+Builder -> CarModel: supportsTransmission(AUTOMATIC)?
+activate CarModel
+CarModel --> Builder: true
+deactivate CarModel
+
+Builder -> CarModel: supportsInteriorFeature(LEATHER)?
+activate CarModel
+CarModel --> Builder: true
+deactivate CarModel
+
+Builder -> CarModel: supportsSafetyFeature(ABS)?
+activate CarModel
+CarModel --> Builder: true
+deactivate CarModel
+
+create Car
+Builder -> Car: new Car(model, engine, ...)
+note right: Immutable Car created
+Builder --> Wizard: car
+deactivate Builder
+
+Wizard --> Client: car
+deactivate Wizard
+
+@enduml

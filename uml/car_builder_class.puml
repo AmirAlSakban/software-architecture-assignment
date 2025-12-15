@@ -1,0 +1,175 @@
+@startuml car_builder_class_diagram
+!theme plain
+skinparam classAttributeIconSize 0
+skinparam classFontSize 11
+
+title Car Builder - Class Diagram
+
+package "car.domain" {
+    enum CarModel {
+        SEDAN
+        SUV
+        SPORTS
+        COMPACT
+        --
+        -displayName: String
+        -allowedEngines: Set<EngineType>
+        -allowedTransmissions: Set<TransmissionType>
+        -allowedInteriorFeatures: Set<InteriorFeature>
+        -allowedExteriorFeatures: Set<ExteriorFeature>
+        -allowedSafetyFeatures: Set<SafetyFeature>
+        --
+        +supportsEngine(engine: EngineType): boolean
+        +supportsTransmission(transmission: TransmissionType): boolean
+        +supportsInteriorFeature(feature: InteriorFeature): boolean
+        +supportsExteriorFeature(feature: ExteriorFeature): boolean
+        +supportsSafetyFeature(feature: SafetyFeature): boolean
+    }
+    
+    enum EngineType {
+        V6
+        V8
+        --
+        -displayName: String
+        -horsepower: int
+    }
+    
+    enum TransmissionType {
+        MANUAL
+        AUTOMATIC
+        --
+        -displayName: String
+    }
+    
+    enum Color {
+        BLACK, WHITE, SILVER, RED, BLUE, GREEN
+    }
+    
+    enum InteriorFeature {
+        LEATHER, GPS, SOUND_SYSTEM
+    }
+    
+    enum ExteriorFeature {
+        SUNROOF, SPORT_RIMS, STANDARD_RIMS
+    }
+    
+    enum SafetyFeature {
+        ABS, AIRBAGS, REAR_CAMERA
+    }
+    
+    class Car <<immutable>> {
+        -model: CarModel
+        -engine: EngineType
+        -transmission: TransmissionType
+        -color: Color
+        -interiorFeatures: Set<InteriorFeature>
+        -exteriorFeatures: Set<ExteriorFeature>
+        -safetyFeatures: Set<SafetyFeature>
+        --
+        ~Car(model, engine, transmission, color, interior, exterior, safety)
+        +getModel(): CarModel
+        +getEngine(): EngineType
+        +getTransmission(): TransmissionType
+        +getColor(): Color
+        +getInteriorFeatures(): Set<InteriorFeature>
+        +getExteriorFeatures(): Set<ExteriorFeature>
+        +getSafetyFeatures(): Set<SafetyFeature>
+        +getSummary(): String
+    }
+}
+
+package "car.builder" {
+    class CarBuilder {
+        -model: CarModel
+        -engine: EngineType
+        -transmission: TransmissionType
+        -color: Color
+        -interiorFeatures: Set<InteriorFeature>
+        -exteriorFeatures: Set<ExteriorFeature>
+        -safetyFeatures: Set<SafetyFeature>
+        --
+        +withModel(model: CarModel): CarBuilder
+        +withEngine(engine: EngineType): CarBuilder
+        +withTransmission(transmission: TransmissionType): CarBuilder
+        +setColor(color: Color): CarBuilder
+        +addInteriorFeature(feature: InteriorFeature): CarBuilder
+        +addExteriorFeature(feature: ExteriorFeature): CarBuilder
+        +addSafetyFeature(feature: SafetyFeature): CarBuilder
+        +withSunroof(): CarBuilder
+        +withRims(sportRims: boolean): CarBuilder
+        +build(): Car
+        +reset(): CarBuilder
+        -validateRequiredFields(): void
+        -validateCompatibility(): void
+    }
+    
+    class CarConfigurationWizard <<Director>> {
+        -builder: CarBuilder
+        --
+        +selectModel(model: CarModel): EngineStep
+        +buildBasicSedan(color: Color): Car
+        +buildLuxurySUV(color: Color): Car
+        +buildSportsCar(color: Color): Car
+    }
+    
+    interface EngineStep {
+        +selectEngine(engine: EngineType): TransmissionStep
+    }
+    
+    interface TransmissionStep {
+        +selectTransmission(transmission: TransmissionType): OptionsStep
+    }
+    
+    interface OptionsStep {
+        +setColor(color: Color): OptionsStep
+        +addInteriorFeature(feature: InteriorFeature): OptionsStep
+        +addExteriorFeature(feature: ExteriorFeature): OptionsStep
+        +addSafetyFeature(feature: SafetyFeature): OptionsStep
+        +withSunroof(): OptionsStep
+        +build(): Car
+    }
+    
+    class InvalidCarConfigurationException {
+        +InvalidCarConfigurationException(message: String)
+    }
+}
+
+' Relationships
+Car --> CarModel
+Car --> EngineType
+Car --> TransmissionType
+Car --> Color
+Car --> "*" InteriorFeature
+Car --> "*" ExteriorFeature
+Car --> "*" SafetyFeature
+
+CarModel --> "*" EngineType : allowed
+CarModel --> "*" TransmissionType : allowed
+CarModel --> "*" InteriorFeature : allowed
+CarModel --> "*" ExteriorFeature : allowed
+CarModel --> "*" SafetyFeature : allowed
+
+CarBuilder ..> Car : creates
+CarBuilder ..> InvalidCarConfigurationException : throws
+CarBuilder --> CarModel : validates against
+
+CarConfigurationWizard --> CarBuilder : uses
+CarConfigurationWizard ..> EngineStep : returns
+EngineStep ..> TransmissionStep : returns
+TransmissionStep ..> OptionsStep : returns
+OptionsStep ..> Car : builds
+
+note right of CarBuilder
+  Builder Pattern
+  - Fluent API
+  - Validates required fields
+  - Validates compatibility with model
+end note
+
+note right of CarConfigurationWizard
+  Director Pattern (Step Builder)
+  - Enforces build order via interfaces
+  - Provides pre-configured templates
+end note
+
+@enduml

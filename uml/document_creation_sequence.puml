@@ -1,0 +1,55 @@
+@startuml document_creation_sequence
+!theme plain
+
+title Document Creation via Factory/Registry
+
+actor Client
+participant Editor
+participant DocumentFactory
+participant "registry:\nMap<String, Provider>" as Registry
+participant DocumentProvider
+participant Document
+
+Client -> Editor: newDocument("pdf", "Report")
+activate Editor
+
+Editor -> DocumentFactory: createDocument("pdf", "Report")
+activate DocumentFactory
+
+DocumentFactory -> DocumentFactory: key = formatKey.toLowerCase()
+DocumentFactory -> Registry: get(key)
+activate Registry
+Registry --> DocumentFactory: PdfDocumentProvider
+deactivate Registry
+
+alt Provider found
+    DocumentFactory -> DocumentProvider: create("Report")
+    activate DocumentProvider
+    
+    create Document
+    DocumentProvider -> Document: new PdfDocument("Report")
+    DocumentProvider --> DocumentFactory: document
+    deactivate DocumentProvider
+    
+    DocumentFactory --> Editor: document
+else Provider not found
+    DocumentFactory -> DocumentFactory: throw UnknownDocumentFormatException
+end
+
+deactivate DocumentFactory
+
+Editor -> Editor: currentDocument = document
+Editor --> Client: this (Editor)
+deactivate Editor
+
+note over DocumentFactory
+  No switch statements!
+  Registry lookup only
+end note
+
+note over Document
+  Concrete type (PdfDocument)
+  but returned as Document interface
+end note
+
+@enduml

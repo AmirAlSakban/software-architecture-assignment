@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="car.builder.CarBuilderTest" tests="23" skipped="0" failures="0" errors="0" timestamp="2025-12-15T15:23:52" hostname="LENOVOT590" time="0.235">
+  <properties/>
+  <testcase name="Should throw exception when engine is missing" classname="car.builder.CarBuilderTest" time="0.089"/>
+  <testcase name="Should throw exception when transmission is missing" classname="car.builder.CarBuilderTest" time="0.004"/>
+  <testcase name="Should throw exception for unsupported interior feature" classname="car.builder.CarBuilderTest" time="0.003"/>
+  <testcase name="Should list all missing fields" classname="car.builder.CarBuilderTest" time="0.004"/>
+  <testcase name="Should build valid Sports car" classname="car.builder.CarBuilderTest" time="0.012"/>
+  <testcase name="Should throw exception for null safety feature" classname="car.builder.CarBuilderTest" time="0.004"/>
+  <testcase name="Should throw exception for null engine" classname="car.builder.CarBuilderTest" time="0.002"/>
+  <testcase name="Should throw exception for unsupported transmission" classname="car.builder.CarBuilderTest" time="0.002"/>
+  <testcase name="Should throw exception for null color" classname="car.builder.CarBuilderTest" time="0.003"/>
+  <testcase name="Should throw exception for null model" classname="car.builder.CarBuilderTest" time="0.003"/>
+  <testcase name="Should throw exception for unsupported exterior feature" classname="car.builder.CarBuilderTest" time="0.002"/>
+  <testcase name="Should throw exception for null interior feature" classname="car.builder.CarBuilderTest" time="0.005"/>
+  <testcase name="Should build valid Sedan with V6" classname="car.builder.CarBuilderTest" time="0.002"/>
+  <testcase name="Should throw exception for null transmission" classname="car.builder.CarBuilderTest" time="0.002"/>
+  <testcase name="Should build valid Compact car" classname="car.builder.CarBuilderTest" time="0.005"/>
+  <testcase name="withRims(false) should add standard rims" classname="car.builder.CarBuilderTest" time="0.006"/>
+  <testcase name="Should build valid SUV with all options" classname="car.builder.CarBuilderTest" time="0.002"/>
+  <testcase name="Should use default color when not specified" classname="car.builder.CarBuilderTest" time="0.007"/>
+  <testcase name="Should throw exception for unsupported safety feature" classname="car.builder.CarBuilderTest" time="0.003"/>
+  <testcase name="Should throw exception for unsupported engine" classname="car.builder.CarBuilderTest" time="0.016"/>
+  <testcase name="Should reset builder state" classname="car.builder.CarBuilderTest" time="0.003"/>
+  <testcase name="Should support fluent API chaining" classname="car.builder.CarBuilderTest" time="0.005"/>
+  <testcase name="Should throw exception when model is missing" classname="car.builder.CarBuilderTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
