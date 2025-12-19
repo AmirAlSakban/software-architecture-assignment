@@ -13,6 +13,8 @@ import editor.core.Document;
 import editor.core.UnknownDocumentFormatException;
 import editor.factory.DocumentFactory;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Scanner;
 import java.util.stream.Collectors;
@@ -46,10 +48,15 @@ public final class CarManagementApp {
             System.out.println(document.render());
 
             byte[] savedBytes = system.getEditor().save();
+            Path outputPath = DocumentStorage.save(Path.of("output"), formatKey, document.getTitle(), savedBytes);
             System.out.printf("Document generated successfully (%d bytes).%n", savedBytes.length);
+            System.out.printf("Saved to: %s%n", outputPath.toAbsolutePath().normalize());
         } catch (UnknownDocumentFormatException ex) {
             System.err.printf("Unknown document format '%s'. Supported formats: %s%n",
                     ex.getFormatKey(), documentFactory.getSupportedFormats());
+            System.exit(1);
+        } catch (IOException ex) {
+            System.err.printf("Failed to write document to disk: %s%n", ex.getMessage());
             System.exit(1);
         } catch (InvalidCarConfigurationException ex) {
             System.err.printf("Invalid car configuration: %s%n", ex.getMessage());

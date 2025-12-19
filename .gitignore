@@ -2,6 +2,10 @@
 .gradle/
 build/
 
+# App output
+output/
+out/
+
 # IntelliJ IDEA
 .idea/
 *.iml
