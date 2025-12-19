@@ -50,3 +50,7 @@ check.dependsOn jacocoTestCoverageVerification
 application {
     mainClass = 'integration.CarManagementApp'
 }
+
+tasks.named('run') {
+    standardInput = System.in
+}
