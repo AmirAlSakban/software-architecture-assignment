@@ -1,8 +1,13 @@
 package editor.formats;
 
 import editor.core.AbstractDocument;
+import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 
-import java.nio.charset.StandardCharsets;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 /**
  * Word document implementation.
@@ -18,19 +23,29 @@ public class WordDocument extends AbstractDocument {
     
     @Override
     public byte[] save() {
-        // Simulate Word XML format (simplified DOCX structure)
-        String wordContent = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<w:document xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\">\n" +
-                "  <w:body>\n" +
-                "    <w:title>" + escapeXml(title) + "</w:title>\n" +
-                "    <w:p>\n" +
-                "      <w:r>\n" +
-                "        <w:t>" + escapeXml(content) + "</w:t>\n" +
-                "      </w:r>\n" +
-                "    </w:p>\n" +
-                "  </w:body>\n" +
-                "</w:document>";
-        return wordContent.getBytes(StandardCharsets.UTF_8);
+        try (XWPFDocument doc = new XWPFDocument(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            XWPFParagraph titlePara = doc.createParagraph();
+            titlePara.setAlignment(ParagraphAlignment.LEFT);
+            XWPFRun titleRun = titlePara.createRun();
+            titleRun.setBold(true);
+            titleRun.setFontSize(16);
+            titleRun.setText(title);
+
+            if (content != null && !content.isEmpty()) {
+                for (String line : content.split("\n")) {
+                    XWPFParagraph bodyPara = doc.createParagraph();
+                    bodyPara.setAlignment(ParagraphAlignment.LEFT);
+                    XWPFRun bodyRun = bodyPara.createRun();
+                    bodyRun.setFontSize(12);
+                    bodyRun.setText(line);
+                }
+            }
+
+            doc.write(out);
+            return out.toByteArray();
+        } catch (IOException ex) {
+            return ("DOCX generation failed: " + ex.getMessage()).getBytes();
+        }
     }
     
     @Override
@@ -47,14 +62,5 @@ public class WordDocument extends AbstractDocument {
     @Override
     public String getFormatKey() {
         return FORMAT_KEY;
-    }
-    
-    private String escapeXml(String text) {
-        if (text == null) return "";
-        return text.replace("&", "&amp;")
-                   .replace("<", "&lt;")
-                   .replace(">", "&gt;")
-                   .replace("\"", "&quot;")
-                   .replace("'", "&apos;");
     }
 }

@@ -7,6 +7,8 @@ import editor.factory.DocumentFactory;
 import editor.formats.PdfDocument;
 import editor.formats.WordDocument;
 import editor.formats.HtmlDocument;
+import integration.order.Order;
+import integration.order.OrderService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -165,6 +167,16 @@ class CarManagementSystemTest {
         assertTrue(pdfRender.contains("[PDF Preview]"));
         assertTrue(wordRender.contains("[Word Document Preview]"));
         assertTrue(htmlRender.contains("[HTML Preview]"));
+    }
+
+    @Test
+    @DisplayName("Should include order metadata when provided")
+    void shouldIncludeOrderMetadataWhenProvided() {
+        OrderService orderService = carSystem.getOrderService();
+        Order order = orderService.placeOrder(testCar);
+
+        Document doc = carSystem.generateCarDocument(testCar, "pdf", order);
+        assertTrue(doc.getContent().contains(order.getId().toString()));
     }
     
     @Test

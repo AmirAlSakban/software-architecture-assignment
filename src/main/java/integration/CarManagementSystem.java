@@ -4,6 +4,8 @@ import car.domain.Car;
 import editor.core.Document;
 import editor.core.Editor;
 import editor.factory.DocumentFactory;
+import integration.order.Order;
+import integration.order.OrderService;
 
 /**
  * Car Management System that integrates car configuration with document generation.
@@ -13,15 +15,18 @@ public class CarManagementSystem {
     
     private final Editor editor;
     private final CarReportGenerator reportGenerator;
+    private final OrderService orderService;
     
     public CarManagementSystem(DocumentFactory documentFactory) {
         this.editor = new Editor(documentFactory);
         this.reportGenerator = new CarReportGenerator();
+        this.orderService = new OrderService();
     }
     
     public CarManagementSystem(Editor editor) {
         this.editor = editor;
         this.reportGenerator = new CarReportGenerator();
+        this.orderService = new OrderService();
     }
     
     /**
@@ -32,8 +37,12 @@ public class CarManagementSystem {
      * @return the generated document
      */
     public Document generateCarDocument(Car car, String formatKey) {
+        return generateCarDocument(car, formatKey, null);
+    }
+
+    public Document generateCarDocument(Car car, String formatKey, Order order) {
         String title = reportGenerator.generateTitle(car);
-        String content = reportGenerator.generateReport(car);
+        String content = reportGenerator.generateReport(car, order);
         
         editor.newDocument(formatKey, title)
               .edit(content);
@@ -49,7 +58,11 @@ public class CarManagementSystem {
      * @return the saved document as bytes
      */
     public byte[] generateAndSaveCarDocument(Car car, String formatKey) {
-        generateCarDocument(car, formatKey);
+        return generateAndSaveCarDocument(car, formatKey, null);
+    }
+
+    public byte[] generateAndSaveCarDocument(Car car, String formatKey, Order order) {
+        generateCarDocument(car, formatKey, order);
         return editor.save();
     }
     
@@ -61,7 +74,11 @@ public class CarManagementSystem {
      * @return the document preview
      */
     public String previewCarDocument(Car car, String formatKey) {
-        generateCarDocument(car, formatKey);
+        return previewCarDocument(car, formatKey, null);
+    }
+
+    public String previewCarDocument(Car car, String formatKey, Order order) {
+        generateCarDocument(car, formatKey, order);
         return editor.preview();
     }
     
@@ -79,5 +96,9 @@ public class CarManagementSystem {
      */
     public CarReportGenerator getReportGenerator() {
         return reportGenerator;
+    }
+
+    public OrderService getOrderService() {
+        return orderService;
     }
 }

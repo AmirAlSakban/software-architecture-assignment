@@ -34,6 +34,14 @@ class DocumentStorageTest {
 
         assertTrue(saved.getFileName().toString().endsWith(".bin"));
     }
+    @Test
+    void saveShouldWriteDocxForWord() throws IOException {
+        byte[] payload = "doc".getBytes(StandardCharsets.UTF_8);
+
+        Path saved = DocumentStorage.save(tempDir, "word", "Report", payload);
+
+        assertTrue(saved.getFileName().toString().endsWith(".docx"));
+    }
 
     @Test
     void sanitizeFileNameShouldRemoveInvalidCharacters() {

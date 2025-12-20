@@ -2,8 +2,14 @@ package editor.formats;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
+import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -41,11 +47,14 @@ class DocumentFormatsTest {
         pdf.setContent("Content");
         
         byte[] saved = pdf.save();
-        String content = new String(saved, StandardCharsets.UTF_8);
-        
-        assertTrue(content.startsWith("%PDF-1.4"));
-        assertTrue(content.contains("Content"));
-        assertTrue(content.endsWith("%%EOF"));
+
+        try (PDDocument doc = PDDocument.load(saved)) {
+            String text = new PDFTextStripper().getText(doc);
+            assertTrue(text.contains("Test"));
+            assertTrue(text.contains("Content"));
+        } catch (Exception ex) {
+            fail("PDF should be readable: " + ex.getMessage());
+        }
     }
     
     // Word Document Tests
@@ -77,12 +86,15 @@ class DocumentFormatsTest {
         word.setContent("Content");
         
         byte[] saved = word.save();
-        String content = new String(saved, StandardCharsets.UTF_8);
-        
-        assertTrue(content.contains("<?xml version"));
-        assertTrue(content.contains("w:document"));
-        assertTrue(content.contains("<w:title>Test</w:title>"));
-        assertTrue(content.contains("Content"));
+
+        try (XWPFDocument doc = new XWPFDocument(new ByteArrayInputStream(saved))) {
+            List<XWPFParagraph> paragraphs = doc.getParagraphs();
+            String allText = paragraphs.stream().map(XWPFParagraph::getText).reduce("", (a, b) -> a + " " + b);
+            assertTrue(allText.contains("Test"));
+            assertTrue(allText.contains("Content"));
+        } catch (Exception ex) {
+            fail("DOCX should be readable: " + ex.getMessage());
+        }
     }
     
     @Test
@@ -90,13 +102,16 @@ class DocumentFormatsTest {
     void wordShouldEscapeXmlCharacters() {
         WordDocument word = new WordDocument("Test <>&\"'");
         word.setContent("<script>alert('xss')</script>");
-        
+
         byte[] saved = word.save();
-        String content = new String(saved, StandardCharsets.UTF_8);
-        
-        assertTrue(content.contains("&lt;"));
-        assertTrue(content.contains("&gt;"));
-        assertTrue(content.contains("&amp;"));
+
+        try (XWPFDocument doc = new XWPFDocument(new ByteArrayInputStream(saved))) {
+            String allText = doc.getParagraphs().stream().map(XWPFParagraph::getText).reduce("", (a, b) -> a + " " + b);
+            assertTrue(allText.contains("Test <>"));
+            assertTrue(allText.contains("alert('xss')"));
+        } catch (Exception ex) {
+            fail("DOCX should be readable: " + ex.getMessage());
+        }
     }
     
     // HTML Document Tests
@@ -106,6 +121,20 @@ class DocumentFormatsTest {
     void htmlShouldHaveCorrectFormatKey() {
         HtmlDocument html = new HtmlDocument("Test");
         assertEquals("html", html.getFormatKey());
+    }
+
+    @Test
+    @DisplayName("HtmlDocument should escape content and use template")
+    void htmlShouldEscapeContent() {
+        HtmlDocument html = new HtmlDocument("Title & <tag>");
+        html.setContent("Hello <World> & 'all'");
+
+        byte[] saved = html.save();
+        String content = new String(saved, StandardCharsets.UTF_8);
+
+        assertTrue(content.contains("&lt;tag&gt;"));
+        assertTrue(content.contains("Hello &lt;World&gt; &amp; &#39;all&#39;"));
+        assertTrue(content.contains("<main>"));
     }
     
     @Test

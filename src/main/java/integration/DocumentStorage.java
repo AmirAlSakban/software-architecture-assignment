@@ -17,7 +17,7 @@ final class DocumentStorage {
         String extension = switch (formatKey) {
             case "pdf" -> "pdf";
             case "html" -> "html";
-            case "word" -> "xml";
+            case "word" -> "docx";
             default -> "bin";
         };
 

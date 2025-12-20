@@ -26,6 +26,51 @@ This project implements:
 gradle build
 ```
 
+## How to Run (Console Demo)
+
+The project includes a small interactive console app that generates a car configuration report in one of the supported document formats.
+
+**Entry point:** `integration.CarManagementApp` (wired via the Gradle `application` plugin).
+
+### Run interactively
+
+```bash
+# macOS/Linux (or Git Bash on Windows)
+./gradlew run
+
+# Windows PowerShell / Command Prompt
+./gradlew.bat run
+```
+
+You will be prompted to choose a document format (`pdf`, `html`, `word`).
+
+### Run non-interactively (pick a format)
+
+```bash
+# Pass the format as an argument
+./gradlew run --args="pdf"
+./gradlew.bat run --args="pdf"
+
+# Or pipe the input (useful in scripts)
+printf "pdf\n" | ./gradlew run
+```
+
+### Where is the file saved?
+
+When the app finishes, it prints an absolute file path. Files are written to the project-root folder:
+
+- `output/`
+
+Example:
+
+- `output/SUV_-_Configuration_Report.pdf`
+
+**Note on formats:**
+
+- `pdf` is saved as a minimal valid `.pdf` for viewing (not encrypted).
+- `html` is saved as `.html`.
+- `word` is saved as `.xml` (a simplified Word-like XML, not a real `.docx`).
+
 ## How to Run Tests
 
 ```bash
@@ -66,6 +111,7 @@ src/
 │   │   │   ├── Document.java      # Document interface
 │   │   │   ├── AbstractDocument.java
 │   │   │   ├── Editor.java        # Main editor class
+
 │   │   │   └── UnknownDocumentFormatException.java
 │   │   ├── factory/               # Factory & Registry
 │   │   │   ├── DocumentFactory.java
@@ -99,17 +145,12 @@ src/
 │   ├── car/
 │   └── integration/
 uml/                               # PlantUML diagrams
-├── document_editor_class.puml
 ├── car_builder_class.puml
 ├── document_creation_sequence.puml
 ├── car_configuration_sequence.puml
-└── car_document_generation_sequence.puml
 ```
 
 ## How to Add a New Document Format
-
-Adding a new format requires **no changes to the Editor or DocumentFactory**:
-
 ### Step 1: Create the Document Implementation
 
 ```java

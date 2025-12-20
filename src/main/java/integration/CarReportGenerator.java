@@ -1,6 +1,7 @@
 package integration;
 
 import car.domain.Car;
+import integration.order.Order;
 
 /**
  * Format-agnostic car report generator.
@@ -16,6 +17,10 @@ public class CarReportGenerator {
      * @return the report content
      */
     public String generateReport(Car car) {
+        return generateReport(car, null);
+    }
+
+    public String generateReport(Car car, Order order) {
         StringBuilder sb = new StringBuilder();
         
         sb.append("VEHICLE SPECIFICATION REPORT\n");
@@ -23,6 +28,11 @@ public class CarReportGenerator {
         
         sb.append("Model: ").append(car.getModel().getDisplayName()).append("\n");
         sb.append("Color: ").append(car.getColor().getDisplayName()).append("\n\n");
+
+        if (order != null) {
+            sb.append("Order ID: ").append(order.getId()).append("\n");
+            sb.append("Order Status: ").append(order.getStatus()).append("\n\n");
+        }
         
         sb.append("POWERTRAIN\n");
         sb.append("----------\n");

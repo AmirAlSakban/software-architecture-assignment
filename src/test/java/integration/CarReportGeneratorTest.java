@@ -2,6 +2,8 @@ package integration;
 
 import car.builder.CarBuilder;
 import car.domain.*;
+import integration.order.Order;
+import integration.order.OrderService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -110,5 +112,17 @@ class CarReportGeneratorTest {
         assertFalse(report.contains("INTERIOR FEATURES"));
         assertFalse(report.contains("EXTERIOR FEATURES"));
         assertFalse(report.contains("SAFETY FEATURES"));
+    }
+
+    @Test
+    @DisplayName("Report should include order metadata when present")
+    void reportShouldIncludeOrderMetadata() {
+        OrderService orderService = new OrderService();
+        Order order = orderService.placeOrder(testCar);
+
+        String report = generator.generateReport(testCar, order);
+
+        assertTrue(report.contains(order.getId().toString()));
+        assertTrue(report.contains(order.getStatus().name()));
     }
 }

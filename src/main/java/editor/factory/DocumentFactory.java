@@ -55,7 +55,7 @@ public class DocumentFactory {
         DocumentProvider provider = registry.get(key);
         
         if (provider == null) {
-            throw new UnknownDocumentFormatException(formatKey);
+            throw new UnknownDocumentFormatException(formatKey, getSupportedFormats());
         }
         
         return provider.create(title);

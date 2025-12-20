@@ -12,6 +12,7 @@ import car.domain.TransmissionType;
 import editor.core.Document;
 import editor.core.UnknownDocumentFormatException;
 import editor.factory.DocumentFactory;
+import integration.order.Order;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -40,9 +41,10 @@ public final class CarManagementApp {
             System.out.printf("Using format: %s%n", formatKey.toUpperCase());
 
             Car sampleCar = buildSampleCar();
+            Order order = system.getOrderService().placeOrder(sampleCar);
             printCarSummary(sampleCar);
 
-            Document document = system.generateCarDocument(sampleCar, formatKey);
+            Document document = system.generateCarDocument(sampleCar, formatKey, order);
 
             System.out.println("\n=== Document Preview ===");
             System.out.println(document.render());
@@ -53,7 +55,7 @@ public final class CarManagementApp {
             System.out.printf("Saved to: %s%n", outputPath.toAbsolutePath().normalize());
         } catch (UnknownDocumentFormatException ex) {
             System.err.printf("Unknown document format '%s'. Supported formats: %s%n",
-                    ex.getFormatKey(), documentFactory.getSupportedFormats());
+                    ex.getFormatKey(), ex.getSupportedFormats());
             System.exit(1);
         } catch (IOException ex) {
             System.err.printf("Failed to write document to disk: %s%n", ex.getMessage());

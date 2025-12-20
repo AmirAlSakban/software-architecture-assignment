@@ -83,8 +83,13 @@ class DocumentFactoryTest {
     @Test
     @DisplayName("Factory should throw exception for unknown format")
     void shouldThrowExceptionForUnknownFormat() {
-        assertThrows(UnknownDocumentFormatException.class,
+        factory.register(new PdfDocumentProvider());
+        UnknownDocumentFormatException ex = assertThrows(UnknownDocumentFormatException.class,
             () -> factory.createDocument("unknown", "Test"));
+
+        assertTrue(ex.getMessage().contains("unknown"));
+        assertTrue(ex.getMessage().contains("pdf"));
+        assertTrue(ex.getSupportedFormats().contains("pdf"));
     }
     
     @Test
